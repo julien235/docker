@@ -75,7 +75,9 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
     if [ -f /var/www/html/version.php ]; then
         # shellcheck disable=SC2016
         installed_version="$(php -r 'require "/var/www/html/version.php"; echo implode(".", $OC_Version);')"
+        echo "DEBUG : installed version detected: $installed_version"
     fi
+    echo "DEBUG : installed version detected outside if condition : $installed_version"
     # shellcheck disable=SC2016
     image_version="$(php -r 'require "/usr/src/nextcloud/version.php"; echo implode(".", $OC_Version);')"
 
@@ -90,7 +92,7 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
             echo "Upgrading nextcloud from $installed_version ..."
             run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" > /tmp/list_before
         else
-            echo "Not upgrading !"
+            echo "DEBUG : not upgrading !"
         fi
         if [ "$(id -u)" = 0 ]; then
             rsync_options="-rlDog --chown www-data:root"
