@@ -85,10 +85,12 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
     fi
 
     if version_greater "$image_version" "$installed_version"; then
-        echo "Initializing nextcloud $image_version ..."
+        echo "Initializing nextcloud $image_version from $installed_version ..."
         if [ "$installed_version" != "0.0.0.0" ]; then
             echo "Upgrading nextcloud from $installed_version ..."
             run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" > /tmp/list_before
+        else
+            echo "Not upgrading !"
         fi
         if [ "$(id -u)" = 0 ]; then
             rsync_options="-rlDog --chown www-data:root"
