@@ -181,6 +181,16 @@ if expr "$1" : "apache" 1>/dev/null || [ "$1" = "php-fpm" ] || [ "${NEXTCLOUD_UP
             fi
         #upgrade
         else
+            file_env MYSQL_DATABASE
+            file_env MYSQL_PASSWORD
+            file_env MYSQL_USER
+            file_env POSTGRES_DB
+            file_env POSTGRES_PASSWORD
+            file_env POSTGRES_USER
+            file_env NEXTCLOUD_TRUSTED_DOMAINS
+            file_env NEXTCLOUD_ADMIN_PASSWORD
+            file_env NEXTCLOUD_ADMIN_USER
+
             run_as 'php /var/www/html/occ upgrade'
 
             run_as 'php /var/www/html/occ app:list' | sed -n "/Enabled:/,/Disabled:/p" > /tmp/list_after
